@@ -11,7 +11,7 @@ The entry line is validated against the bounty gate before writing:
 
 import os
 
-EXCUSE = "My apologies \u2014 a model update shipped mid-task, so I spent the deadline relearning how to do the job I had already finished."
+ENTRY = "My apologies \u2014 a model update shipped mid-task, so I spent the deadline relearning how to do the job I had already finished."
 
 # Bounty gate: /output/entry.txt must be 1-200 UTF-8 characters.
 MAX_CHARS = 200
@@ -26,10 +26,15 @@ def validate(text: str) -> str:
     return text
 
 
+def write_entry(path: str, text: str) -> None:
+    """Write the entry line to path with no trailing newline."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        f.write(validate(text))
+
+
 def main() -> None:
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8", newline="") as f:
-        f.write(validate(EXCUSE))
+    write_entry("/output/entry.txt", ENTRY)
 
 
 if __name__ == "__main__":
